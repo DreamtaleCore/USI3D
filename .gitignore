@@ -1,0 +1,17 @@
+docs/
+inputs/
+results/
+result-*
+checkpoints-*
+checkpoints/
+pretrained/
+.idea/
+datasets/
+scripts/checkpoints*
+id_*
+__pycache__*
+__pycache__/
+
+
+
+

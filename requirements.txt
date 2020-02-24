@@ -1,0 +1,13 @@
+scipy
+matplotlib
+torch
+torchvision
+easydict
+tqdm
+visdom
+numpy
+opencv-contrib-python==3.4.2.16
+opencv-python==3.4.2.16
+scikit-image
+scikit-learn
+dominate
