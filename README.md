@@ -6,15 +6,12 @@
 ![License CC BY-NC](https://img.shields.io/badge/license-CC_BY--NC-DodgerBlue.svg?style=plastic)
 
 <div align=center>  <img src="figures/teaser.jpg" alt="Introduction" width="500" align="bottom" /> </div>
-
-**Picture:** *Examples of single image layer separation: reflection separation and intrinsic image decomposition.*
+**Picture:** *Our method learns intrinsic image decomposition in an unsupervised fashion where the ground truth reflectance and shading is not available in the training data.*
 
 <div align=center>  <img src="./figures/main_image.jpg" alt="Teaser image" width="800" align="center" /> </div>
-
 **Picture:** *The proposed architecture.*
 
 <div align=center>  <img src="./figures/MPI-results.jpg" alt="Teaser image" width="800" align="center" /> </div>
-
 **Picture:** *Visual results on MPI Sintel benchmark.*
 
 This repository contains the official PyTorch implementation of the following paper:
