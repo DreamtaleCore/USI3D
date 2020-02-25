@@ -5,6 +5,8 @@
 ![CUDA 10.0](https://img.shields.io/badge/cuda-10.0-DodgerBlue.svg?style=plastic)
 ![License CC BY-NC](https://img.shields.io/badge/license-CC_BY--NC-DodgerBlue.svg?style=plastic)
 
+ Our paper is accepted by **CVPR2020**. 
+
 <div align=center>  <img src="figures/teaser.jpg" alt="Teaser" width="500" align="bottom" /> </div>
 
 **Picture:**  *Our method learns intrinsic image decomposition inTeaser an unsupervised fashion where the ground truth reflectance and shading is not available in the training data.*
@@ -12,13 +14,11 @@
 
 
 <div align=center>  <img src="./figures/main_image.jpg" alt="Main image" width="800" align="center" /> </div>
-
 **Picture:**  *The proposed architecture.*
 
 
 
 <div align=center>  <img src="./figures/MPI-results.jpg" alt="MPI Results" width="800" align="center" /> </div>
-
 **Picture:**  *Visual results on MPI Sintel benchmark.*
 
 
@@ -49,3 +49,20 @@ Material related to our paper is available via the following links:
 ## Playing with pre-trained networks and training
 
 Coming soon!
+
+## Citation
+
+If you find this work or code is helpful in your research, please cite:
+
+```latex
+@inproceedings{Liu2020Unsupervised,
+	title={Unsupervised Learning for Intrinsic Image Decomposition from a Single Image},
+	author={Liu, Yunfei and Li, Yu and You, Shaodi and Lu, Feng},
+	booktitle={CVPR},
+	year={2020}
+}
+```
+
+## Contact
+
+If you have any questions, feel free to E-mail me via: `lyunfei(at)buaa.edu.cn`
