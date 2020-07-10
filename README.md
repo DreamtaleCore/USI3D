@@ -35,7 +35,7 @@ This repository contains the official PyTorch implementation of the following pa
 Material related to our paper is available via the following links:
 
 - Paper:  https://arxiv.org/abs/1911.09930 
-- Project: Coming soon!
+- Project: http://liuyunfei.xyz/Projs/USI3D/
 - Code: https://github.com/DreamtaleCore/USI3D
 
 ## System requirements
