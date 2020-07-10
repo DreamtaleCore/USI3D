@@ -1,3 +1,6 @@
+"""
+@author: DreamTale
+"""
 from networks import AdaINGen, MsImageDis, IntrinsicSplitor, IntrinsicMerger, LocalAlbedoSmoothnessLoss
 from utils import weights_init, get_model_list, get_scheduler
 from torch.autograd import Variable
@@ -14,8 +17,8 @@ class UnsupIntrinsicTrainer(nn.Module):
         self.gen_i = AdaINGen(param['input_dim_a'], param['input_dim_a'], param['gen'])  # auto-encoder for domain I
         self.gen_r = AdaINGen(param['input_dim_b'], param['input_dim_b'], param['gen'])  # auto-encoder for domain R
         self.gen_s = AdaINGen(param['input_dim_c'], param['input_dim_c'], param['gen'])  # auto-encoder for domain S
-        self.dis_r = MsImageDis(param['input_dim_b'], param['dis'])  # discriminator for domain R
-        self.dis_s = MsImageDis(param['input_dim_c'], param['dis'])  # discriminator for domain S
+        self.dis_r = MsImageDis(param['input_dim_b'], param['dis'])                      # discriminator for domain R
+        self.dis_s = MsImageDis(param['input_dim_c'], param['dis'])                      # discriminator for domain S
         gp = param['gen']
         self.with_mapping = True
         self.use_phy_loss = True
@@ -33,7 +36,7 @@ class UnsupIntrinsicTrainer(nn.Module):
 
         if self.with_mapping:
             self.fea_s = IntrinsicSplitor(gp['style_dim'], gp['mlp_dim'], gp['n_layer'], gp['activ'])  # split style for I
-            self.fea_m = IntrinsicMerger(gp['style_dim'], gp['mlp_dim'], gp['n_layer'], gp['activ'])  # merge style for R, S
+            self.fea_m = IntrinsicMerger(gp['style_dim'], gp['mlp_dim'], gp['n_layer'], gp['activ'])   # merge style for R, S
         self.bias_shift = param['bias_shift']
         self.instance_norm = nn.InstanceNorm2d(512, affine=False)
         self.style_dim = param['gen']['style_dim']
@@ -334,95 +337,3 @@ class UnsupIntrinsicTrainer(nn.Module):
                         'best_result': self.best_result}, gen_name)
         torch.save({'r': self.dis_r.state_dict(), 's': self.dis_s.state_dict()}, dis_name)
         torch.save({'gen': self.gen_opt.state_dict(), 'dis': self.dis_opt.state_dict()}, opt_name)
-
-
-class SupIntrinsicTrainer(nn.Module):
-    def __init__(self, param):
-        super(SupIntrinsicTrainer, self).__init__()
-        lr = param['lr']
-        # Initiate the networks
-        self.model = AdaINGen(param['input_dim_a'],
-                              param['input_dim_b'] + param['input_dim_b'],
-                              param['gen'])  # auto-encoder
-
-        # Setup the optimizers
-        beta1 = param['beta1']
-        beta2 = param['beta2']
-        gen_params = list(self.model.parameters())
-        self.gen_opt = torch.optim.Adam([p for p in gen_params if p.requires_grad],
-                                        lr=lr, betas=(beta1, beta2), weight_decay=param['weight_decay'])
-        self.gen_scheduler = get_scheduler(self.gen_opt, param)
-
-        # Network weight initialization
-        self.apply(weights_init(param['init']))
-        self.best_result = float('inf')
-
-    def recon_criterion(self, input, target, mask=None):
-        if mask is not None:
-            return torch.mean(torch.abs(input[mask] - target[mask]))
-        else:
-            return torch.mean(torch.abs(input - target))
-
-    def forward(self, x):
-        self.eval()
-        out = self.model(x)
-        x_r, x_s = out[:, :3, :, :], out[:, :, 3:, :]
-        return x_r, x_s
-
-    def gen_update(self, x_i, x_r, x_s, x_m, param):
-        self.gen_opt.zero_grad()
-
-        out = self.model(x_i)
-        pred_r, pred_s = out[:, :3, :, :], out[:, 3:, :, :]
-
-        # reconstruction loss
-        self.loss_r = self.recon_criterion(pred_r, x_r, x_m)
-        self.loss_s = self.recon_criterion(pred_s, x_s, x_m)
-        # total loss
-        self.loss_gen_total = self.loss_r + self.loss_s
-        self.loss_gen_total.backward()
-        self.gen_opt.step()
-
-    def sample(self, x_i, x_r, x_s):
-        self.eval()
-        x_ri, x_si = [], []
-        for i in range(x_i.size(0)):
-            out = self.model(x_i[i].unsqueeze(0))
-            x_r, x_s = out[:, :3, :, :], out[:, 3:, :, :]
-            x_ri.append(x_r)
-            x_si.append(x_s)
-        x_ri = torch.cat(x_ri)
-        x_si = torch.cat(x_si)
-        self.train()
-        return x_i, x_r, x_ri, x_s, x_si
-
-    # noinspection PyAttributeOutsideInit
-    def dis_update(self, x_i, x_r, x_s, param=None):
-        pass
-
-    def update_learning_rate(self):
-        if self.gen_scheduler is not None:
-            self.gen_scheduler.step()
-
-    def resume(self, checkpoint_dir, param):
-        # Load generators
-        last_model_name = get_model_list(checkpoint_dir, "gen")
-        state_dict = torch.load(last_model_name)
-        self.model.load_state_dict(state_dict['i'])
-        iterations = int(last_model_name[-11:-3])
-
-        # Load optimizers
-        state_dict = torch.load(os.path.join(checkpoint_dir, 'optimizer.pt'))
-        self.gen_opt.load_state_dict(state_dict['gen'])
-        # Reinitilize schedulers
-        self.gen_scheduler = get_scheduler(self.gen_opt, param, iterations)
-        print('Resume from iteration %d' % iterations)
-        return iterations
-
-    def save(self, snapshot_dir, iterations):
-        # Save generators, discriminators, and optimizers
-        gen_name = os.path.join(snapshot_dir, 'gen_%08d.pt' % (iterations + 1))
-        opt_name = os.path.join(snapshot_dir, 'optimizer.pt')
-        torch.save({'model': self.model.state_dict(), 'best_result': self.best_result}, gen_name)
-        torch.save({'gen': self.gen_opt.state_dict()}, opt_name)
-

@@ -9,7 +9,7 @@
 
 <div align=center>  <img src="figures/teaser.jpg" alt="Teaser" width="500" align="bottom" /> </div>
 
-**Picture:**  *Our method learns intrinsic image decomposition inTeaser an unsupervised fashion where the ground truth reflectance and shading is not available in the training data.*
+**Picture:**  *Our method learns intrinsic image decomposition in an unsupervised fashion where the ground truth reflectance and shading is not available in the training data.*
 
 
 
@@ -48,7 +48,25 @@ Material related to our paper is available via the following links:
 
 ## Playing with pre-trained networks and training
 
-Coming soon!
+### Test
+
+1. Download the pretrained model, and put them to the `pretrained_model` dir
+2. Run the command below to decompose images into albedo and shading
+
+```bash
+python3 test.py -c configs/intrinsic_MPI.yaml -i /your/test/images/root/ -o ./results/ -p /pretrained_model/MPI.pt
+```
+
+Then then results will be generated in the `./results` dir.
+
+### Train
+1. Download the dataset to your `<your_dataset_root>`.
+2. Midify the `data_root` to `<your_dataset_root>` in the `*.yaml` in the `./configs`.
+3. Run the commands below to train the model.
+
+```bash
+python3 train.py -c configs/intrinsic_MPI.yaml -o ./checkpoints/ -g <your gpu id>
+```
 
 ## Citation
 

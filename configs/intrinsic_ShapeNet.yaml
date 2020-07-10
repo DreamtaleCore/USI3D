@@ -47,7 +47,7 @@ dis:
   pad_type: reflect           # padding type [zero/reflect]
 
 # data options
-dataset_name: CGI                           # name the dataset
+dataset_name: ShapeNet                      # name the dataset
 input_dim_a: 3                              # number of image channels [1/3]
 input_dim_b: 3                              # number of image channels [1/3]
 input_dim_c: 3                              # number of image channels [1/3]
