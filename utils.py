@@ -14,26 +14,6 @@ import torch.nn.init as init
 import time
 
 
-# Methods
-# get_all_data_loaders      : primary data loader interface (load trainA, testA, trainB, testB)
-# get_data_loader_list      : list-based data loader
-# get_data_loader_folder    : folder-based data loader
-# get_config                : load yaml file
-# eformat                   :
-# write_2images             : save output image
-# prepare_sub_folder        : create checkpoints and images folders for saving outputs
-# write_one_row_html        : write one row of the html file for output images
-# write_html                : create the html file.
-# write_loss
-# slerp
-# get_slerp_interp
-# get_model_list
-# load_vgg16
-# vgg_preprocess
-# get_scheduler
-# weights_init
-
-
 def get_local_time():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
