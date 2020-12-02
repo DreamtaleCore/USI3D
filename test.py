@@ -71,7 +71,8 @@ intrinsic_image_decompose = trainer.inference
 with torch.no_grad():
     transform = transforms.Compose([transforms.Resize(new_size),
                                     transforms.ToTensor(),
-                                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+#                                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))    # Make sure the vaule range of input tensor be consistent to the training time
+                                   ])
 
     image_paths = os.listdir(opts.input_dir)
     image_paths = [x for x in image_paths if is_image_file(x)]
