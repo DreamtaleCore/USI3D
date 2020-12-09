@@ -132,7 +132,7 @@ class UnsupIntrinsicTrainer(nn.Module):
         x_ri_rand = self.gen_r.decode(c_i, s_r_rand)
         x_sr = self.gen_s.decode(c_r, s_s_rand)
         x_si = self.gen_s.decode(c_i, s_si)
-        x_si_rand = self.gen_s.decode(c_i, s_r_rand)
+        x_si_rand = self.gen_s.decode(c_i, s_s_rand)
         # encode again, for feature domain consistency constraints
         c_rs_recon, s_rs_recon = self.gen_r.encode(x_rs)
         c_ri_recon, s_ri_recon = self.gen_r.encode(x_ri)
@@ -249,7 +249,7 @@ class UnsupIntrinsicTrainer(nn.Module):
             x_s_recon.append(self.gen_s.decode(c_s, s_s_fake))
             x_rs.append(self.gen_r.decode(c_s, s_r[i].unsqueeze(0)))
             x_ri.append(self.gen_r.decode(c_i, s_ri.unsqueeze(0)))
-            x_sr.append(self.gen_s.decode(c_s, s_s[i].unsqueeze(0)))
+            x_sr.append(self.gen_s.decode(c_r, s_s[i].unsqueeze(0)))
             x_si.append(self.gen_s.decode(c_i, s_si.unsqueeze(0)))
         x_i_recon, x_r_recon, x_s_recon = torch.cat(x_i_recon), torch.cat(x_r_recon), torch.cat(x_s_recon)
         x_rs, x_ri = torch.cat(x_rs), torch.cat(x_ri)
