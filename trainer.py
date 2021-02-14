@@ -69,6 +69,7 @@ class UnsupIntrinsicTrainer(nn.Module):
         self.dis_s.apply(weights_init('gaussian'))
         self.best_result = float('inf')
         self.reflectance_loss = LocalAlbedoSmoothnessLoss(param)
+        self.kl_div_loss = nn.KLDivLoss(reduction='mean')
 
     def recon_criterion(self, input, target):
         return torch.mean(torch.abs(input - target))
@@ -188,6 +189,13 @@ class UnsupIntrinsicTrainer(nn.Module):
         # Physical loss
         self.loss_gen_phy_i = self.physical_criterion(x_i, x_ri, x_si) if self.use_phy_loss is True else 0
         self.loss_gen_phy_i_rand = self.physical_criterion(x_i, x_ri_rand, x_si_rand) if self.use_phy_loss is True else 0
+        
+        # KL Divergence loss
+        self.loss_kl_r = self.kl_div_loss(nn.functional.log_softmax(s_ri, dim=1),
+                                          nn.functional.log_softmax(s_r_prime, dim=1)) if self.with_mapping and ('kl_w' in param) else 0
+        self.loss_kl_s = self.kl_div_loss(nn.functional.log_softmax(s_si, dim=1),
+                                          nn.functional.log_softmax(s_s_prime, dim=1)) if self.with_mapping and ('kl_w' in param) else 0
+        param['kl'] = 0 if 'kl_w' not in param else param['kl']
 
         # Reflectance smoothness loss
         self.loss_refl_ri = self.reflectance_loss(x_ri, targets) if targets is not None else 0
@@ -225,7 +233,9 @@ class UnsupIntrinsicTrainer(nn.Module):
                               param['phy_x_w'] * self.loss_gen_phy_i + \
                               param['phy_x_w'] * self.loss_gen_phy_i_rand + \
                               param['refl_smooth_w'] * self.loss_refl_ri + \
-                              param['refl_smooth_w'] * self.loss_refl_ri_rand
+                              param['refl_smooth_w'] * self.loss_refl_ri_rand + \
+                              param['kl_w'] * self.loss_kl_r + \
+                              param['kl_w'] * self.loss_kl_s
 
         self.loss_gen_total.backward()
         self.gen_opt.step()
