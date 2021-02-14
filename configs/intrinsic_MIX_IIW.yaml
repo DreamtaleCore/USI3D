@@ -23,6 +23,7 @@ gamma: 0.5                    # how much to decay learning rate
 gan_w: 0.1                    # weight of adversarial loss
 recon_x_w: 10                 # weight of image reconstruction loss
 phy_x_w: 1.                   # weight of physical reconstruction loss
+kl_w: 0.1                     # weight of physical reconstruction loss
 recon_s_w: 0.1                # weight of hidden reconstruction loss
 recon_c_w: 0.1                # weight of hidden reconstruction loss
 recon_x_cyc_w: 10             # weight of cycle consistency loss
