@@ -14,11 +14,13 @@
 
 
 <div align=center>  <img src="./figures/main_image.jpg" alt="Main image" width="800" align="center" /> </div>
+
 **Picture:**  *The proposed architecture.*
 
 
 
 <div align=center>  <img src="./figures/MPI-results.jpg" alt="MPI Results" width="800" align="center" /> </div>
+
 **Picture:**  *Visual results on MPI Sintel benchmark.*
 
 
@@ -35,7 +37,7 @@ This repository contains the official PyTorch implementation of the following pa
 Material related to our paper is available via the following links:
 
 - Paper:  https://arxiv.org/abs/1911.09930 
-- Project: http://liuyunfei.net/Projs/USI3D/
+- Project: https://liuyunfei.net/publication/cvpr2020_usi3d/external_pages/index.html
 - Code: https://github.com/DreamtaleCore/USI3D
 
 ## System requirements
