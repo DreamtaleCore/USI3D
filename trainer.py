@@ -309,7 +309,7 @@ class UnsupIntrinsicTrainer(nn.Module):
     def resume(self, checkpoint_dir, param):
         # Load generators
         last_model_name = get_model_list(checkpoint_dir, "gen")
-        state_dict = torch.load(last_model_name)
+        state_dict = torch.load(last_model_name, weights_only=True)
         self.gen_i.load_state_dict(state_dict['i'])
         self.gen_r.load_state_dict(state_dict['r'])
         self.gen_s.load_state_dict(state_dict['s'])
@@ -320,11 +320,11 @@ class UnsupIntrinsicTrainer(nn.Module):
         iterations = int(last_model_name[-11:-3])
         # Load discriminators
         last_model_name = get_model_list(checkpoint_dir, "dis")
-        state_dict = torch.load(last_model_name)
+        state_dict = torch.load(last_model_name, weights_only=True)
         self.dis_r.load_state_dict(state_dict['r'])
         self.dis_s.load_state_dict(state_dict['s'])
         # Load optimizers
-        state_dict = torch.load(os.path.join(checkpoint_dir, 'optimizer.pt'))
+        state_dict = torch.load(os.path.join(checkpoint_dir, 'optimizer.pt'), weights_only=True)
         self.dis_opt.load_state_dict(state_dict['dis'])
         self.gen_opt.load_state_dict(state_dict['gen'])
         # Reinitilize schedulers
